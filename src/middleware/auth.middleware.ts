@@ -4,27 +4,23 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
 import { Request, Response, NextFunction } from 'express';
+import { TokenJWTService } from 'src/services/token/token-jwt.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly jwtService: JwtService) {}
+  constructor(private readonly jwtModule: TokenJWTService) {}
 
   async use(req: Request, res: Response, next: NextFunction) {
-    const excludedPaths = ['/login', '/signup', '/api-docs'];
-    if (excludedPaths.some((path) => req.path.startsWith(path))) {
-      return next();
-    }
-
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new HttpException('Token not provided', HttpStatus.UNAUTHORIZED);
     }
 
     const token = authHeader.split(' ')[1];
+    console.log('token', token);
     try {
-      await this.jwtService.verifyAsync(token);
+      await this.jwtModule.decrypt(token);
       next();
     } catch (error) {
       throw new HttpException('Token invalid', HttpStatus.UNAUTHORIZED);

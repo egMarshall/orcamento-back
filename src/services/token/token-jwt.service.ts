@@ -28,6 +28,8 @@ export class TokenJWTService {
       ignoreExpiration: true,
     });
 
+    console.log('token no decrypt', token);
+
     if (token.exp < Date.now() / 1000) {
       throw new Error('Token expired');
     }
