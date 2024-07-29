@@ -99,7 +99,15 @@ export class UsersService {
       throw new HttpException('No users found', HttpStatus.NO_CONTENT);
     }
 
-    return allUsers;
+    const allusersNameAndMail = allUsers.map((user) => {
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    });
+
+    return allusersNameAndMail;
   }
 
   async findOne(id: string) {
@@ -113,7 +121,11 @@ export class UsersService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    return user;
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
 
   async update(id: string, data: UpdateUserDto) {
@@ -127,12 +139,18 @@ export class UsersService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
 
-    return await this.prisma.user.update({
+    const user = await this.prisma.user.update({
       data,
       where: {
         id,
       },
     });
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+    };
   }
 
   async remove(id: string) {
