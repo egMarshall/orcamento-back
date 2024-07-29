@@ -18,7 +18,7 @@ export class AuthMiddleware implements NestMiddleware {
     }
 
     const token = authHeader.split(' ')[1];
-    console.log('token', token);
+
     try {
       await this.jwtModule.decrypt(token);
       next();

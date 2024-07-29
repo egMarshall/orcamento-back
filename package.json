@@ -9,6 +9,7 @@
     "node": ">=21.4.0"
   },
   "scripts": {
+    "migrations": "npx prisma migrate dev --name migrations",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
