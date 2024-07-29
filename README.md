@@ -18,11 +18,6 @@
 - [Swagger](https://swagger.io/)
 
 
-## Variáveis de Ambiente
-
-Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
-
-
 ## Rotas pelo Postman
 
 ### Usuários
@@ -33,17 +28,13 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
 
 
+## Variáveis de Ambiente
+
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
+
 **DB**
 
-`PG_DB_NAME`
-
-`PG_DB_USER`
-
-`PG_DB_PASS`
-
-`PG_DB_HOST`
-
-`PG_DB_PORT`
+`DATABASE_URL`
 
 **JWT**
 
@@ -61,7 +52,7 @@ Clone o projeto
 Entre no diretório do projeto
 
 ```bash
-  cd orcamento-back
+  cd the_budget_back
 ```
 
 Instale as dependências
