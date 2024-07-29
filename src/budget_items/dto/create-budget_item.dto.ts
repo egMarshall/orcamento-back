@@ -6,6 +6,7 @@ enum ItemType {
 export class CreateBudgetItemDto {
   user_id: string;
   name: string;
-  price: number;
+  value: number;
   type: ItemType;
+  date: Date;
 }

@@ -8,12 +8,6 @@ export class BudgetItemsService {
   constructor(private prisma: PrismaService) {}
 
   async create(data: CreateBudgetItemDto) {
-    const budgetItemExists = await this.prisma.items.findFirst({
-      where: {
-        name: data.name,
-      },
-    });
-
     const userExists = await this.prisma.user.findFirst({
       where: {
         id: data.user_id,
@@ -24,22 +18,42 @@ export class BudgetItemsService {
       throw new Error('User does not exist');
     }
 
+    const budgetItemExists = await this.prisma.items.findFirst({
+      where: {
+        name: data.name,
+      },
+    });
+
     if (budgetItemExists) {
       throw new Error('Budget item already exists');
     }
 
     const budgetItem = await this.prisma.items.create({
-      data,
+      data: {
+        name: data.name,
+        value: data.value,
+        type: data.type,
+        date: data.date,
+        user: {
+          connect: {
+            id: data.user_id,
+          },
+        },
+      },
     });
 
     return budgetItem;
   }
 
-  async findAll() {
-    const allItems = await this.prisma.items.findMany();
+  async findAll(user_id: string) {
+    const allItems = await this.prisma.items.findMany({
+      where: {
+        user_id,
+      },
+    });
 
     if (allItems.length < 1) {
-      throw new Error('No budget items found');
+      throw new Error('No budget items for this user found');
     }
 
     return allItems;

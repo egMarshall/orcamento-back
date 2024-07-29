@@ -27,10 +27,10 @@ export class BudgetItemsController {
     }
   }
 
-  @Get()
-  async findAll() {
+  @Get(':user_id')
+  async findAll(@Param('user_id') user_id: string) {
     try {
-      return await this.budgetItemsService.findAll();
+      return await this.budgetItemsService.findAll(user_id);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NO_CONTENT);
     }

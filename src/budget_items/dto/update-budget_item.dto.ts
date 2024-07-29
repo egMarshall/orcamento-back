@@ -8,8 +8,8 @@ enum ItemType {
 
 export class UpdateBudgetItemDto extends PartialType(CreateBudgetItemDto) {
   id: string;
-  user_id: string;
   name: string;
-  price: number;
+  value: number;
   type: ItemType;
+  date: Date;
 }

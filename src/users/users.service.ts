@@ -95,6 +95,8 @@ export class UsersService {
   async findAll() {
     const allUsers = await this.prisma.user.findMany();
 
+    console.log(allUsers);
+
     if (allUsers.length < 1) {
       throw new HttpException('No users found', HttpStatus.NO_CONTENT);
     }
@@ -134,6 +136,10 @@ export class UsersService {
         id,
       },
     });
+
+    if (data.email!) {
+      throw new HttpException('Email cannot be updated', HttpStatus.FORBIDDEN);
+    }
 
     if (!userExists) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
