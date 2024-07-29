@@ -1,73 +1,241 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# The Budget App - Back-End
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## O que é necessário para testar essa aplicação?
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+- Ter o [Node.js](https://nodejs.org/en) instalado na versão 21.4.0 ou acima;
+- Ter o gerenciador de pacotes [Yarn](https://yarnpkg.com/) instalado;
+- Algum Rest Client: [Insomnia](https://insomnia.rest/download), [Postman](https://www.postman.com/), [cURL](https://curl.se/), [Thunder](https://www.thunderclient.com/);
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Tecnologias utilizadas
 
-## Installation
+- [NestJS](https://nestjs.com/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Express](https://expressjs.com/pt-br/)
+- [Prisma](https://prisma.io/)
+- [PostgreSQL](https://www.postgresql.org/)
+- [JWT](https://jwt.io/)
+- [Swagger](https://swagger.io/)
+
+
+## Variáveis de Ambiente
+
+Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
+
+
+## Rotas pelo Postman
+
+### Usuários
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-7b1495a5-e6b8-4d81-a3ae-a542fbd6a47a?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-7b1495a5-e6b8-4d81-a3ae-a542fbd6a47a%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
+
+
+### Itens
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
+
+
+**DB**
+
+`PG_DB_NAME`
+
+`PG_DB_USER`
+
+`PG_DB_PASS`
+
+`PG_DB_HOST`
+
+`PG_DB_PORT`
+
+**JWT**
+
+`JWT_SECRET`
+
+
+## Rodando localmente
+
+Clone o projeto
 
 ```bash
-$ yarn install
+  git clone https://github.com/egMarshall/the_budget_back
 ```
 
-## Running the app
+Entre no diretório do projeto
 
 ```bash
-# development
-$ yarn run start
-
-# watch mode
-$ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
+  cd orcamento-back
 ```
 
-## Test
+Instale as dependências
 
 ```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+  yarn
 ```
 
-## Support
+Inicie o banco de dados
+```bash
+ npx prisma generate
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+npx prisma migrate deploy
+```
 
-## Stay in touch
+Inicie o servidor
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+  yarn start:dev
+```
 
-## License
+## Rodando no Docker
+```bash
+  docker-compose up --build    
+```
 
-Nest is [MIT licensed](LICENSE).
+
+## Funcionalidades
+
+**Usuários:**
+
+- [x] Cadastrar Usuário;
+- [x] Login de Usuário;
+- [x] Atualizar dados de Usuário;
+- [x] Deletar Usuário;
+- [x] Buscar Usuário por ID;
+- [X] Buscar todos os usuários.
+
+
+**Itens:**
+
+- [x] Cadastrar Item (Receita ou Despesa) por ID do Usuário;
+- [x] Atualizar Item por ID;
+- [x] Deletar Item por ID;
+- [x] Buscar Item por ID;
+- [X] Buscar todos os Items do usuário por ID do usuário.
+
+
+## Endpoints
+
+#### Swagger Documentation
+
+```http
+  GET /api-docs
+```
+
+
+#### Criar Usuário
+
+```http
+  POST /users/signup
+```
+
+| Parâmetro    | Tipo     | Descrição                                |
+| :----------- | :------- | :--------------------------------------- |
+| `name`       | `string` | **Obrigatório**. Nome do usuário         |
+| `email`      | `string` | **Obrigatório**. e-mail do usuário       |
+| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
+
+
+#### Login do Usuário
+
+```http
+  POST /users/login
+```
+
+| Parâmetro    | Tipo     | Descrição                                |
+| :----------- | :------- | :--------------------------------------- |
+| `name`       | `string` | **Obrigatório**. Nome do usuário         |
+| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
+
+
+#### Atualizar dados do Usuário (apenas nome ou senha)
+
+```http
+  PUT /users/:id
+```
+
+| Parâmetro    | Tipo     | Descrição                                |
+| :----------- | :------- | :--------------------------------------- |
+| `name`       | `string` | **Obrigatório**. Nome do usuário         |
+| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
+
+
+#### Deletar Usuário
+
+```http
+  DELETE /users/:id
+```
+
+
+#### Buscar Usuário
+
+```http
+  GET /users/:id
+```
+
+
+#### Buscar todos os Usuários
+
+```http
+  GET /users
+```
+
+
+#### Criar Item
+
+```http
+  POST /budget-items
+```
+
+| Parâmetro    | Tipo     | Descrição                                         |
+| :----------- | :------- | :------------------------------------------------ |
+| `user_id`    | `string` | **Obrigatório**. ID do Usuário                    |
+| `name`       | `string` | **Obrigatório**. Nome do Item                     | 
+| `vale`       | `Number` | **Obrigatório**. Valor do item                    |
+| `type`       | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa)|
+| `date`       | `Date`   | **Obrigatório**. Data do Gasto ou Receita         |
+
+
+#### Editar Item
+
+```http
+  PUT /budget-items/:id
+```
+
+| Parâmetro    | Tipo     | Descrição                                         |
+| :----------- | :------- | :------------------------------------------------ |
+| `name`       | `string` | **Obrigatório**. Nome do Item                     | 
+| `vale`       | `Number` | **Obrigatório**. Valor do item                    |
+| `type`       | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa)|
+| `date`       | `Date`   | **Obrigatório**. Data do Gasto ou Receita         |
+
+
+#### Deletar Item
+
+```http
+  DELETE /budget-items/:id
+```
+
+
+#### Buscar Item 
+
+```http
+  GET /budget-items/:id
+```
+
+#### Buscar todos os Itens do Usuário
+
+```http
+  GET /budget-items/:user_id
+```
+
+- Exemplo de Requisição:
+
+```sh
+curl -X POST \
+  http://localhost:3001/users/login \
+  -H 'Cache-Control: no-cache' \
+  -H 'Content-Type: application/json' \
+  -d '{
+	"email": "kukac@kukac.com",
+    "password": "kukac123"
+}'
+```
