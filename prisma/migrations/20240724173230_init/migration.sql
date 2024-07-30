@@ -20,6 +20,7 @@ CREATE TABLE "Items" (
     "name" TEXT NOT NULL,
     "value" DOUBLE PRECISION NOT NULL,
     "type" "ItemType" NOT NULL,
+    "date" DATE NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
