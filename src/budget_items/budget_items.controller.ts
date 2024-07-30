@@ -5,8 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  HttpException,
-  HttpStatus,
   Put,
 } from '@nestjs/common';
 import { BudgetItemsService } from './budget_items.service';
@@ -23,7 +21,7 @@ export class BudgetItemsController {
       const newItem = await this.budgetItemsService.create(createBudgetItemDto);
       return newItem;
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+      return { error: error.message, status: error.status };
     }
   }
 
@@ -32,7 +30,7 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.findAll(user_id);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NO_CONTENT);
+      return { error: error.message, status: error.status };
     }
   }
 
@@ -41,7 +39,7 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.findOne(id);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      return { error: error.message, status: error.status };
     }
   }
 
@@ -53,7 +51,7 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.update(id, updateBudgetItemDto);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      return { error: error.message, status: error.status };
     }
   }
 
@@ -62,7 +60,7 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.remove(id);
     } catch (error) {
-      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+      return { error: error.message, status: error.status };
     }
   }
 }
