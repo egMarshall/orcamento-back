@@ -25,7 +25,7 @@ export class BudgetItemsController {
     }
   }
 
-  @Get(':user_id')
+  @Get('/all/:user_id')
   async findAll(@Param('user_id') user_id: string) {
     try {
       return await this.budgetItemsService.findAll(user_id);

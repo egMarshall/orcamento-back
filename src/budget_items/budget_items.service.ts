@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBudgetItemDto } from './dto/create-budget_item.dto';
 import { UpdateBudgetItemDto } from './dto/update-budget_item.dto';
 import { PrismaService } from 'src/database/prisma.service';
@@ -15,17 +15,21 @@ export class BudgetItemsService {
     });
 
     if (!userExists) {
-      throw new Error('User does not exist');
+      throw new HttpException('User does not exist', HttpStatus.NOT_FOUND);
     }
 
     const budgetItemExists = await this.prisma.items.findFirst({
       where: {
         name: data.name,
+        user_id: data.user_id,
       },
     });
 
     if (budgetItemExists) {
-      throw new Error('Budget item already exists');
+      throw new HttpException(
+        'Budget item already exists',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const budgetItem = await this.prisma.items.create({
@@ -33,7 +37,7 @@ export class BudgetItemsService {
         name: data.name,
         value: data.value,
         type: data.type,
-        date: data.date,
+        date: new Date(data.date),
         user: {
           connect: {
             id: data.user_id,
@@ -42,7 +46,13 @@ export class BudgetItemsService {
       },
     });
 
-    return budgetItem;
+    return {
+      id: budgetItem.id,
+      name: budgetItem.name,
+      value: budgetItem.value,
+      type: budgetItem.type,
+      date: budgetItem.date,
+    };
   }
 
   async findAll(user_id: string) {
@@ -53,7 +63,7 @@ export class BudgetItemsService {
     });
 
     if (allItems.length < 1) {
-      throw new Error('No budget items for this user found');
+      throw new HttpException('No items found', HttpStatus.NOT_FOUND);
     }
 
     return allItems;
@@ -67,7 +77,7 @@ export class BudgetItemsService {
     });
 
     if (!item) {
-      throw new Error('Item not found');
+      throw new HttpException('No items found', HttpStatus.NOT_FOUND);
     }
 
     return item;
@@ -81,15 +91,27 @@ export class BudgetItemsService {
     });
 
     if (!budgetItemExists) {
-      throw new Error('Budget item does not exist');
+      throw new HttpException('No item found', HttpStatus.NOT_FOUND);
     }
 
-    return await this.prisma.items.update({
+    if (data.date) {
+      data.date = new Date(data.date);
+    }
+
+    const updatedItem = await this.prisma.items.update({
       data,
       where: {
         id,
       },
     });
+
+    return {
+      id: updatedItem.id,
+      name: updatedItem.name,
+      value: updatedItem.value,
+      type: updatedItem.type,
+      date: updatedItem.date,
+    };
   }
 
   async remove(id: string) {
@@ -100,7 +122,10 @@ export class BudgetItemsService {
     });
 
     if (!budgetItemExists) {
-      throw new Error('Budget item does not exist');
+      throw new HttpException(
+        'This item does not exists!',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     await this.prisma.items.delete({
