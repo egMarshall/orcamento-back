@@ -215,7 +215,7 @@ Inicie o servidor
 #### Buscar todos os Itens do Usuário
 
 ```http
-  GET /budget-items/:user_id
+  GET /budget-items/all/:user_id
 ```
 
 - Exemplo de Requisição:
