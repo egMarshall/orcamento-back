@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  HttpException,
 } from '@nestjs/common';
 import { BudgetItemsService } from './budget_items.service';
 import { CreateBudgetItemDto } from './dto/create-budget_item.dto';
@@ -30,7 +31,10 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.findAll(user_id);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -39,7 +43,10 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.findOne(id);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -51,7 +58,10 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.update(id, updateBudgetItemDto);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -60,7 +70,10 @@ export class BudgetItemsController {
     try {
       return await this.budgetItemsService.remove(id);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 }

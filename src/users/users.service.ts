@@ -21,7 +21,10 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new HttpException("User don't exists", HttpStatus.NOT_FOUND);
+      throw new HttpException(
+        'Usuário ou senha inválidos',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
     const passwordMatch = await this.hasher.compare(
@@ -30,7 +33,10 @@ export class UsersService {
     );
 
     if (!passwordMatch) {
-      throw new HttpException('Invalid password', HttpStatus.UNAUTHORIZED);
+      throw new HttpException(
+        'Usuário ou senha inválidos',
+        HttpStatus.UNAUTHORIZED,
+      );
     }
 
     const token = await this.tokenService.encrypt({
@@ -57,14 +63,17 @@ export class UsersService {
     });
 
     if (userExists) {
-      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+      throw new HttpException(
+        'Esse usuário já existe!',
+        HttpStatus.BAD_REQUEST,
+      );
     }
 
     const isValidEmail =
       /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email);
 
     if (!isValidEmail) {
-      throw new HttpException('Invalid email', HttpStatus.FORBIDDEN);
+      throw new HttpException('E-mail inválido', HttpStatus.FORBIDDEN);
     }
 
     const hashedPassword = await this.hasher.hash(data.password);
@@ -120,7 +129,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
     }
 
     return {

@@ -26,10 +26,7 @@ export class BudgetItemsService {
     });
 
     if (budgetItemExists) {
-      throw new HttpException(
-        'Budget item already exists',
-        HttpStatus.BAD_REQUEST,
-      );
+      throw new HttpException('Item já cadastrado!', HttpStatus.BAD_REQUEST);
     }
 
     const budgetItem = await this.prisma.items.create({
@@ -63,7 +60,7 @@ export class BudgetItemsService {
     });
 
     if (allItems.length < 1) {
-      throw new HttpException('No items found', HttpStatus.NOT_FOUND);
+      throw new HttpException('Não há itens salvos', HttpStatus.NOT_FOUND);
     }
 
     return allItems.map((item) => {

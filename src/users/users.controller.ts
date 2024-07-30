@@ -6,6 +6,7 @@ import {
   Put,
   Param,
   Delete,
+  HttpException,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,7 +21,10 @@ export class UsersController {
     try {
       return await this.usersService.login(data);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -30,7 +34,10 @@ export class UsersController {
       const newUser = await this.usersService.create(createUserDto);
       return newUser;
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -39,7 +46,10 @@ export class UsersController {
     try {
       return await this.usersService.findAll();
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -48,7 +58,10 @@ export class UsersController {
     try {
       return await this.usersService.findOne(id);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -57,7 +70,10 @@ export class UsersController {
     try {
       return await this.usersService.update(id, updateUserDto);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 
@@ -66,7 +82,10 @@ export class UsersController {
     try {
       return await this.usersService.remove(id);
     } catch (error) {
-      return { error: error.message, status: error.status };
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
     }
   }
 }
