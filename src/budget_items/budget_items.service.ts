@@ -66,7 +66,15 @@ export class BudgetItemsService {
       throw new HttpException('No items found', HttpStatus.NOT_FOUND);
     }
 
-    return allItems;
+    return allItems.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        value: item.value,
+        type: item.type,
+        date: item.date,
+      };
+    });
   }
 
   async findOne(id: string) {
@@ -80,7 +88,13 @@ export class BudgetItemsService {
       throw new HttpException('No items found', HttpStatus.NOT_FOUND);
     }
 
-    return item;
+    return {
+      id: item.id,
+      name: item.name,
+      value: item.value,
+      type: item.type,
+      date: item.date,
+    };
   }
 
   async update(id: string, data: UpdateBudgetItemDto) {
