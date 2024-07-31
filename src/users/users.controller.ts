@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   HttpException,
+  Headers,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -20,6 +21,18 @@ export class UsersController {
   async login(@Body() data: { email: string; password: string }) {
     try {
       return await this.usersService.login(data);
+    } catch (error) {
+      if (error instanceof HttpException) {
+        throw error;
+      }
+      throw new HttpException('Internal server error', 500);
+    }
+  }
+
+  @Get('session')
+  async session(@Headers('authorization') token: string) {
+    try {
+      return await this.usersService.validateSession(token);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

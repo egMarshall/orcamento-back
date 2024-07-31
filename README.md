@@ -6,7 +6,6 @@
 - Ter o gerenciador de pacotes [Yarn](https://yarnpkg.com/) instalado;
 - Algum Rest Client: [Insomnia](https://insomnia.rest/download), [Postman](https://www.postman.com/), [cURL](https://curl.se/), [Thunder](https://www.thunderclient.com/);
 
-
 ## Tecnologias utilizadas
 
 - [NestJS](https://nestjs.com/)
@@ -17,16 +16,15 @@
 - [JWT](https://jwt.io/)
 - [Swagger](https://swagger.io/)
 
-
 ## Rotas pelo Postman
 
 ### Usuários
+
 [<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-7b1495a5-e6b8-4d81-a3ae-a542fbd6a47a?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-7b1495a5-e6b8-4d81-a3ae-a542fbd6a47a%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
 
-
 ### Itens
-[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
 
+[<img src="https://run.pstmn.io/button.svg" alt="Run In Postman" style="width: 128px; height: 32px;">](https://app.getpostman.com/run-collection/17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152?action=collection%2Ffork&source=rip_markdown&collection-url=entityId%3D17588262-c0291fff-12d9-44d7-b2bc-3ab9687ff152%26entityType%3Dcollection%26workspaceId%3Dab6ab9d4-059d-4e5c-96d7-f1818f42883c)
 
 ## Variáveis de Ambiente
 
@@ -39,7 +37,6 @@ Para rodar esse projeto, você vai precisar adicionar as seguintes variáveis de
 **JWT**
 
 `JWT_SECRET`
-
 
 ## Rodando localmente
 
@@ -62,6 +59,7 @@ Instale as dependências
 ```
 
 Inicie o banco de dados
+
 ```bash
  npx prisma generate
 ```
@@ -77,10 +75,10 @@ Inicie o servidor
 ```
 
 ## Rodando no Docker
-```bash
-  docker-compose up --build    
-```
 
+```bash
+  docker-compose up --build
+```
 
 ## Funcionalidades
 
@@ -88,11 +86,11 @@ Inicie o servidor
 
 - [x] Cadastrar Usuário;
 - [x] Login de Usuário;
+- [x] Validar Sessão do Usuário;
 - [x] Atualizar dados de Usuário;
 - [x] Deletar Usuário;
 - [x] Buscar Usuário por ID;
-- [X] Buscar todos os usuários.
-
+- [x] Buscar todos os usuários.
 
 **Itens:**
 
@@ -100,8 +98,7 @@ Inicie o servidor
 - [x] Atualizar Item por ID;
 - [x] Deletar Item por ID;
 - [x] Buscar Item por ID;
-- [X] Buscar todos os Items do usuário por ID do usuário.
-
+- [x] Buscar todos os Items do usuário por ID do usuário.
 
 ## Endpoints
 
@@ -111,19 +108,17 @@ Inicie o servidor
   GET /api-docs
 ```
 
-
 #### Criar Usuário
 
 ```http
   POST /users/signup
 ```
 
-| Parâmetro    | Tipo     | Descrição                                |
-| :----------- | :------- | :--------------------------------------- |
-| `name`       | `string` | **Obrigatório**. Nome do usuário         |
-| `email`      | `string` | **Obrigatório**. e-mail do usuário       |
-| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
-
+| Parâmetro  | Tipo     | Descrição                          |
+| :--------- | :------- | :--------------------------------- |
+| `name`     | `string` | **Obrigatório**. Nome do usuário   |
+| `email`    | `string` | **Obrigatório**. e-mail do usuário |
+| `password` | `string` | **Obrigatório**. Senha do usuário  |
 
 #### Login do Usuário
 
@@ -131,11 +126,20 @@ Inicie o servidor
   POST /users/login
 ```
 
-| Parâmetro    | Tipo     | Descrição                                |
-| :----------- | :------- | :--------------------------------------- |
-| `name`       | `string` | **Obrigatório**. Nome do usuário         |
-| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
+| Parâmetro  | Tipo     | Descrição                         |
+| :--------- | :------- | :-------------------------------- |
+| `name`     | `string` | **Obrigatório**. Nome do usuário  |
+| `password` | `string` | **Obrigatório**. Senha do usuário |
 
+#### Validar Sessão do Usuário
+
+```http
+  GET /users/login/session
+```
+
+| Parâmetro | Tipo     | Descrição                         |
+| :-------- | :------- | :-------------------------------- |
+| `token`   | `string` | **Obrigatório**. Token do usuário |
 
 #### Atualizar dados do Usuário (apenas nome ou senha)
 
@@ -143,11 +147,10 @@ Inicie o servidor
   PUT /users/:id
 ```
 
-| Parâmetro    | Tipo     | Descrição                                |
-| :----------- | :------- | :--------------------------------------- |
-| `name`       | `string` | **Obrigatório**. Nome do usuário         |
-| `password`   | `string` | **Obrigatório**. Senha do usuário        |  
-
+| Parâmetro  | Tipo     | Descrição                         |
+| :--------- | :------- | :-------------------------------- |
+| `name`     | `string` | **Obrigatório**. Nome do usuário  |
+| `password` | `string` | **Obrigatório**. Senha do usuário |
 
 #### Deletar Usuário
 
@@ -155,13 +158,11 @@ Inicie o servidor
   DELETE /users/:id
 ```
 
-
 #### Buscar Usuário
 
 ```http
   GET /users/:id
 ```
-
 
 #### Buscar todos os Usuários
 
@@ -169,21 +170,19 @@ Inicie o servidor
   GET /users
 ```
 
-
 #### Criar Item
 
 ```http
   POST /budget-items
 ```
 
-| Parâmetro    | Tipo     | Descrição                                         |
-| :----------- | :------- | :------------------------------------------------ |
-| `user_id`    | `string` | **Obrigatório**. ID do Usuário                    |
-| `name`       | `string` | **Obrigatório**. Nome do Item                     | 
-| `vale`       | `Number` | **Obrigatório**. Valor do item                    |
-| `type`       | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa)|
-| `date`       | `Date`   | **Obrigatório**. Data do Gasto ou Receita         |
-
+| Parâmetro | Tipo     | Descrição                                          |
+| :-------- | :------- | :------------------------------------------------- |
+| `user_id` | `string` | **Obrigatório**. ID do Usuário                     |
+| `name`    | `string` | **Obrigatório**. Nome do Item                      |
+| `vale`    | `Number` | **Obrigatório**. Valor do item                     |
+| `type`    | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa) |
+| `date`    | `Date`   | **Obrigatório**. Data do Gasto ou Receita          |
 
 #### Editar Item
 
@@ -191,13 +190,12 @@ Inicie o servidor
   PUT /budget-items/:id
 ```
 
-| Parâmetro    | Tipo     | Descrição                                         |
-| :----------- | :------- | :------------------------------------------------ |
-| `name`       | `string` | **Obrigatório**. Nome do Item                     | 
-| `vale`       | `Number` | **Obrigatório**. Valor do item                    |
-| `type`       | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa)|
-| `date`       | `Date`   | **Obrigatório**. Data do Gasto ou Receita         |
-
+| Parâmetro | Tipo     | Descrição                                          |
+| :-------- | :------- | :------------------------------------------------- |
+| `name`    | `string` | **Obrigatório**. Nome do Item                      |
+| `vale`    | `Number` | **Obrigatório**. Valor do item                     |
+| `type`    | `string` | **Obrigatório**. Tipo do item (Receita ou Despesa) |
+| `date`    | `Date`   | **Obrigatório**. Data do Gasto ou Receita          |
 
 #### Deletar Item
 
@@ -205,8 +203,7 @@ Inicie o servidor
   DELETE /budget-items/:id
 ```
 
-
-#### Buscar Item 
+#### Buscar Item
 
 ```http
   GET /budget-items/:id

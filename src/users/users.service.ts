@@ -46,11 +46,6 @@ export class UsersService {
     });
 
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-      },
       token,
     };
   }
@@ -98,6 +93,37 @@ export class UsersService {
         emai: newUser.email,
       },
       token,
+    };
+  }
+
+  async validateSession(token: string) {
+    const userToken = token.split(' ')[1];
+    const payload = await this.tokenService.decrypt(userToken);
+
+    const isValid = await this.tokenService.verify(userToken);
+
+    if (!isValid) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: payload.id,
+      },
+    });
+
+    if (!user) {
+      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+    }
+
+    if (payload.iat < Date.now() / 1000) {
+      throw new HttpException('Expired token', HttpStatus.UNAUTHORIZED);
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
     };
   }
 

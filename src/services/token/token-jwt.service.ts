@@ -33,4 +33,10 @@ export class TokenJWTService {
 
     return token;
   }
+
+  async verify(cipherText: string): Promise<any> {
+    return this.jwtService.verify(cipherText, {
+      secret: this.jwtSecret,
+    });
+  }
 }
