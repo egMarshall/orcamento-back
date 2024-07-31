@@ -116,7 +116,7 @@ export class UsersService {
       throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
     }
 
-    if (payload.iat < Date.now() / 1000) {
+    if (payload.exp * 1000 < Date.now()) {
       throw new HttpException('Expired token', HttpStatus.UNAUTHORIZED);
     }
 
