@@ -2,15 +2,21 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateBudgetItemDto } from './dto/create-budget_item.dto';
 import { UpdateBudgetItemDto } from './dto/update-budget_item.dto';
 import { PrismaService } from 'src/database/prisma.service';
+import { TokenJWTService } from 'src/services/token/token-jwt.service';
 
 @Injectable()
 export class BudgetItemsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private readonly tokenService: TokenJWTService,
+  ) {}
 
-  async create(data: CreateBudgetItemDto) {
+  async create(token: string, data: CreateBudgetItemDto) {
+    const userToken = token.split(' ')[1];
+    const { id } = await this.tokenService.decrypt(userToken);
     const userExists = await this.prisma.user.findFirst({
       where: {
-        id: data.user_id,
+        id: id,
       },
     });
 
@@ -21,7 +27,7 @@ export class BudgetItemsService {
     const budgetItemExists = await this.prisma.items.findFirst({
       where: {
         name: data.name,
-        user_id: data.user_id,
+        user_id: id,
       },
     });
 
@@ -37,7 +43,7 @@ export class BudgetItemsService {
         date: new Date(data.date),
         user: {
           connect: {
-            id: data.user_id,
+            id: id,
           },
         },
       },
@@ -52,10 +58,13 @@ export class BudgetItemsService {
     };
   }
 
-  async findAll(user_id: string) {
+  async findAll(token: string) {
+    const userToken = token.split(' ')[1];
+    const { id } = await this.tokenService.decrypt(userToken);
+
     const allItems = await this.prisma.items.findMany({
       where: {
-        user_id,
+        user_id: id,
       },
     });
 

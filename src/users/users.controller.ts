@@ -4,7 +4,6 @@ import {
   Post,
   Body,
   Put,
-  Param,
   Delete,
   HttpException,
   Headers,
@@ -54,7 +53,7 @@ export class UsersController {
     }
   }
 
-  @Get()
+  @Get('/all')
   async findAll() {
     try {
       return await this.usersService.findAll();
@@ -66,10 +65,10 @@ export class UsersController {
     }
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
+  @Get()
+  async findOne(@Headers('authorization') token: string) {
     try {
-      return await this.usersService.findOne(id);
+      return await this.usersService.findOne(token);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -78,10 +77,13 @@ export class UsersController {
     }
   }
 
-  @Put(':id')
-  async update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  @Put()
+  async update(
+    @Headers('authorization') token: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
     try {
-      return await this.usersService.update(id, updateUserDto);
+      return await this.usersService.update(token, updateUserDto);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
@@ -90,10 +92,10 @@ export class UsersController {
     }
   }
 
-  @Delete(':id')
-  async remove(@Param('id') id: string) {
+  @Delete()
+  async remove(@Headers('authorization') token: string) {
     try {
-      return await this.usersService.remove(id);
+      return await this.usersService.remove(token);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;

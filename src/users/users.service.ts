@@ -100,12 +100,6 @@ export class UsersService {
     const userToken = token.split(' ')[1];
     const payload = await this.tokenService.decrypt(userToken);
 
-    const isValid = await this.tokenService.verify(userToken);
-
-    if (!isValid) {
-      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
-    }
-
     const user = await this.prisma.user.findUnique({
       where: {
         id: payload.id,
@@ -130,8 +124,6 @@ export class UsersService {
   async findAll() {
     const allUsers = await this.prisma.user.findMany();
 
-    console.log(allUsers);
-
     if (allUsers.length < 1) {
       throw new HttpException('No users found', HttpStatus.NO_CONTENT);
     }
@@ -147,7 +139,10 @@ export class UsersService {
     return allusersNameAndMail;
   }
 
-  async findOne(id: string) {
+  async findOne(token: string) {
+    const userToken = token.split(' ')[1];
+    const { id } = await this.tokenService.decrypt(userToken);
+
     const user = await this.prisma.user.findUnique({
       where: {
         id,
@@ -165,7 +160,14 @@ export class UsersService {
     };
   }
 
-  async update(id: string, data: UpdateUserDto) {
+  async update(token: string, data: UpdateUserDto) {
+    const userToken = token.split(' ')[1];
+    const { id } = await this.tokenService.decrypt(userToken);
+
+    if (data.password) {
+      data.password = await this.hasher.hash(data.password);
+    }
+
     const userExists = await this.prisma.user.findUnique({
       where: {
         id,
@@ -194,7 +196,10 @@ export class UsersService {
     };
   }
 
-  async remove(id: string) {
+  async remove(token: string) {
+    const userToken = token.split(' ')[1];
+    const { id } = await this.tokenService.decrypt(userToken);
+
     const userExists = await this.prisma.user.findUnique({
       where: {
         id,

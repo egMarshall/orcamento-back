@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Headers,
   HttpException,
 } from '@nestjs/common';
 import { BudgetItemsService } from './budget_items.service';
@@ -17,19 +18,25 @@ export class BudgetItemsController {
   constructor(private readonly budgetItemsService: BudgetItemsService) {}
 
   @Post()
-  async create(@Body() createBudgetItemDto: CreateBudgetItemDto) {
+  async create(
+    @Headers('authorization') token: string,
+    @Body() createBudgetItemDto: CreateBudgetItemDto,
+  ) {
     try {
-      const newItem = await this.budgetItemsService.create(createBudgetItemDto);
+      const newItem = await this.budgetItemsService.create(
+        token,
+        createBudgetItemDto,
+      );
       return newItem;
     } catch (error) {
       return { error: error.message, status: error.status };
     }
   }
 
-  @Get('/all/:user_id')
-  async findAll(@Param('user_id') user_id: string) {
+  @Get('/all')
+  async findAll(@Headers('authorization') token: string) {
     try {
-      return await this.budgetItemsService.findAll(user_id);
+      return await this.budgetItemsService.findAll(token);
     } catch (error) {
       if (error instanceof HttpException) {
         throw error;
