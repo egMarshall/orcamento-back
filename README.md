@@ -94,7 +94,7 @@ Inicie o servidor
 
 **Itens:**
 
-- [x] Cadastrar Item (Receita ou Despesa) por ID do Usuário;
+- [x] Cadastrar Item (Receita ou Despesa) do Usuário;
 - [x] Atualizar Item por ID;
 - [x] Deletar Item por ID;
 - [x] Buscar Item por ID;
@@ -144,7 +144,7 @@ Inicie o servidor
 #### Atualizar dados do Usuário (apenas nome ou senha)
 
 ```http
-  PUT /users/:id
+  PUT /users/
 ```
 
 | Parâmetro  | Tipo     | Descrição                         |
@@ -155,19 +155,19 @@ Inicie o servidor
 #### Deletar Usuário
 
 ```http
-  DELETE /users/:id
+  DELETE /users
 ```
 
 #### Buscar Usuário
 
 ```http
-  GET /users/:id
+  GET /users
 ```
 
 #### Buscar todos os Usuários
 
 ```http
-  GET /users
+  GET /users/all
 ```
 
 #### Criar Item
@@ -212,7 +212,7 @@ Inicie o servidor
 #### Buscar todos os Itens do Usuário
 
 ```http
-  GET /budget-items/all/:user_id
+  GET /budget-items/all
 ```
 
 - Exemplo de Requisição:
