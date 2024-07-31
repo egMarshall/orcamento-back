@@ -20,10 +20,10 @@ export class AuthMiddleware implements NestMiddleware {
     const token = authHeader.split(' ')[1];
 
     try {
-      await this.jwtModule.decrypt(token);
+      await this.jwtModule.verify(token);
       next();
     } catch (error) {
-      throw new HttpException('Token invalid', HttpStatus.UNAUTHORIZED);
+      throw new HttpException('Invalid Token', HttpStatus.UNAUTHORIZED);
     }
   }
 }
