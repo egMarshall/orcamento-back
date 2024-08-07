@@ -59,7 +59,7 @@ export class UsersService {
 
     if (userExists) {
       throw new HttpException(
-        'Esse usuário já existe!',
+        'Esse email já está em uso!',
         HttpStatus.BAD_REQUEST,
       );
     }
