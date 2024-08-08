@@ -7,7 +7,6 @@ import {
   Delete,
   Put,
   Headers,
-  HttpException,
 } from '@nestjs/common';
 import { BudgetItemsService } from './budget_items.service';
 import { CreateBudgetItemDto } from './dto/create-budget_item.dto';
@@ -22,65 +21,34 @@ export class BudgetItemsController {
     @Headers('authorization') token: string,
     @Body() createBudgetItemDto: CreateBudgetItemDto,
   ) {
-    try {
-      const newItem = await this.budgetItemsService.create(
-        token,
-        createBudgetItemDto,
-      );
-      return newItem;
-    } catch (error) {
-      return { error: error.message, status: error.status };
-    }
+    const newItem = await this.budgetItemsService.create(
+      token,
+      createBudgetItemDto,
+    );
+    return newItem;
   }
 
   @Get('/all')
   async findAll(@Headers('authorization') token: string) {
-    try {
-      return await this.budgetItemsService.findAll(token);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.budgetItemsService.findAll(token);
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    try {
-      return await this.budgetItemsService.findOne(id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.budgetItemsService.findOne(id);
   }
 
   @Put(':id')
   async update(
+    @Headers('authorization') token: string,
     @Param('id') id: string,
     @Body() updateBudgetItemDto: UpdateBudgetItemDto,
   ) {
-    try {
-      return await this.budgetItemsService.update(id, updateBudgetItemDto);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.budgetItemsService.update(token, id, updateBudgetItemDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    try {
-      return await this.budgetItemsService.remove(id);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.budgetItemsService.remove(id);
   }
 }

@@ -52,7 +52,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -99,7 +99,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -131,7 +131,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -156,7 +156,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -184,7 +184,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -229,7 +229,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -256,7 +256,7 @@ export class UsersService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
 

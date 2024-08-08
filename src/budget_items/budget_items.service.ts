@@ -28,7 +28,10 @@ export class BudgetItemsService {
 
       const budgetItemExists = await this.prisma.items.findFirst({
         where: {
-          name: data.name,
+          name: {
+            equals: data.name,
+            mode: 'insensitive',
+          },
           user_id: id,
         },
       });
@@ -61,7 +64,7 @@ export class BudgetItemsService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -89,7 +92,7 @@ export class BudgetItemsService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -116,12 +119,14 @@ export class BudgetItemsService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
 
-  async update(id: string, data: UpdateBudgetItemDto) {
+  async update(token: string, id: string, data: UpdateBudgetItemDto) {
+    const userToken = token.split(' ')[1];
+    const { user_id } = await this.tokenService.decrypt(userToken);
     try {
       const budgetItemExists = await this.prisma.items.findUnique({
         where: {
@@ -135,8 +140,11 @@ export class BudgetItemsService {
 
       const budgetItemNameExists = await this.prisma.items.findFirst({
         where: {
-          name: data.name,
-          user_id: id,
+          name: {
+            equals: data.name,
+            mode: 'insensitive',
+          },
+          user_id,
         },
       });
 
@@ -165,7 +173,7 @@ export class BudgetItemsService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }
@@ -197,7 +205,7 @@ export class BudgetItemsService {
     } catch (error) {
       throw new HttpException(
         error.message || 'Internal server error',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        error.status || HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
   }

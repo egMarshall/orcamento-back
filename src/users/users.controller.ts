@@ -5,7 +5,6 @@ import {
   Body,
   Put,
   Delete,
-  HttpException,
   Headers,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
@@ -18,63 +17,28 @@ export class UsersController {
 
   @Post('login')
   async login(@Body() data: { email: string; password: string }) {
-    try {
-      return await this.usersService.login(data);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.login(data);
   }
 
   @Get('session')
   async session(@Headers('authorization') token: string) {
-    try {
-      return await this.usersService.validateSession(token);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.validateSession(token);
   }
 
   @Post('signup')
   async create(@Body() createUserDto: CreateUserDto) {
-    try {
-      const newUser = await this.usersService.create(createUserDto);
-      return newUser;
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    const newUser = await this.usersService.create(createUserDto);
+    return newUser;
   }
 
   @Get('/all')
   async findAll() {
-    try {
-      return await this.usersService.findAll();
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.findAll();
   }
 
   @Get()
   async findOne(@Headers('authorization') token: string) {
-    try {
-      return await this.usersService.findOne(token);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.findOne(token);
   }
 
   @Put()
@@ -82,25 +46,11 @@ export class UsersController {
     @Headers('authorization') token: string,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    try {
-      return await this.usersService.update(token, updateUserDto);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.update(token, updateUserDto);
   }
 
   @Delete()
   async remove(@Headers('authorization') token: string) {
-    try {
-      return await this.usersService.remove(token);
-    } catch (error) {
-      if (error instanceof HttpException) {
-        throw error;
-      }
-      throw new HttpException('Internal server error', 500);
-    }
+    return await this.usersService.remove(token);
   }
 }
