@@ -14,150 +14,179 @@ export class UsersService {
   ) {}
 
   async login(data: { email: string; password: string }) {
-    const user = await this.prisma.user.findFirst({
-      where: {
-        email: data.email,
-      },
-    });
+    try {
+      const user = await this.prisma.user.findFirst({
+        where: {
+          email: data.email,
+        },
+      });
 
-    if (!user) {
+      if (!user) {
+        throw new HttpException(
+          'Usuário ou senha inválidos',
+          HttpStatus.NOT_FOUND,
+        );
+      }
+
+      const passwordMatch = await this.hasher.compare(
+        data.password,
+        user.password,
+      );
+
+      if (!passwordMatch) {
+        throw new HttpException(
+          'Usuário ou senha inválidos',
+          HttpStatus.UNAUTHORIZED,
+        );
+      }
+
+      const token = await this.tokenService.encrypt({
+        id: user.id,
+        name: user.name,
+        iat: Date.now() / 1000,
+      });
+
+      return {
+        token,
+      };
+    } catch (error) {
       throw new HttpException(
-        'Usuário ou senha inválidos',
-        HttpStatus.NOT_FOUND,
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-
-    const passwordMatch = await this.hasher.compare(
-      data.password,
-      user.password,
-    );
-
-    if (!passwordMatch) {
-      throw new HttpException(
-        'Usuário ou senha inválidos',
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
-
-    const token = await this.tokenService.encrypt({
-      id: user.id,
-      name: user.name,
-      iat: Date.now() / 1000,
-    });
-
-    return {
-      token,
-    };
   }
 
   async create(data: CreateUserDto) {
-    const userExists = await this.prisma.user.findFirst({
-      where: {
-        email: data.email,
-      },
-    });
+    try {
+      const userExists = await this.prisma.user.findFirst({
+        where: {
+          email: data.email,
+        },
+      });
 
-    if (userExists) {
-      throw new HttpException(
-        'Esse email já está em uso!',
-        HttpStatus.BAD_REQUEST,
-      );
-    }
+      if (userExists) {
+        throw new HttpException(
+          'Esse email já está em uso!',
+          HttpStatus.BAD_REQUEST,
+        );
+      }
 
-    const isValidEmail =
-      /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email);
+      const isValidEmail =
+        /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(data.email);
 
-    if (!isValidEmail) {
-      throw new HttpException('E-mail inválido', HttpStatus.FORBIDDEN);
-    }
+      if (!isValidEmail) {
+        throw new HttpException('E-mail inválido', HttpStatus.FORBIDDEN);
+      }
 
-    const hashedPassword = await this.hasher.hash(data.password);
+      const hashedPassword = await this.hasher.hash(data.password);
+      const newUser = await this.prisma.user.create({
+        data: {
+          ...data,
+          password: hashedPassword,
+        },
+      });
 
-    const newUser = await this.prisma.user.create({
-      data: {
-        ...data,
-        password: hashedPassword,
-      },
-    });
-
-    const token = await this.tokenService.encrypt({
-      id: newUser.id,
-      name: newUser.name,
-      iat: Date.now() / 1000,
-    });
-
-    return {
-      user: {
+      const token = await this.tokenService.encrypt({
         id: newUser.id,
         name: newUser.name,
-        emai: newUser.email,
-      },
-      token,
-    };
+        iat: Date.now() / 1000,
+      });
+
+      return {
+        token,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async validateSession(token: string) {
     const userToken = token.split(' ')[1];
     const payload = await this.tokenService.decrypt(userToken);
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id: payload.id,
-      },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id: payload.id,
+        },
+      });
 
-    if (!user) {
-      throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
-    }
+      if (!user) {
+        throw new HttpException('Invalid token', HttpStatus.UNAUTHORIZED);
+      }
 
-    if (payload.exp * 1000 < Date.now()) {
-      throw new HttpException('Expired token', HttpStatus.UNAUTHORIZED);
-    }
+      if (payload.exp * 1000 < Date.now()) {
+        throw new HttpException('Expired token', HttpStatus.UNAUTHORIZED);
+      }
 
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
-  }
-
-  async findAll() {
-    const allUsers = await this.prisma.user.findMany();
-
-    if (allUsers.length < 1) {
-      throw new HttpException('No users found', HttpStatus.NO_CONTENT);
-    }
-
-    const allusersNameAndMail = allUsers.map((user) => {
       return {
         id: user.id,
         name: user.name,
         email: user.email,
       };
-    });
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
 
-    return allusersNameAndMail;
+  async findAll() {
+    try {
+      const allUsers = await this.prisma.user.findMany();
+
+      if (allUsers.length < 1) {
+        throw new HttpException('No users found', HttpStatus.NO_CONTENT);
+      }
+
+      const allusersNameAndMail = allUsers.map((user) => {
+        return {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        };
+      });
+
+      return allusersNameAndMail;
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   async findOne(token: string) {
     const userToken = token.split(' ')[1];
     const { id } = await this.tokenService.decrypt(userToken);
 
-    const user = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    if (!user) {
-      throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+      if (!user) {
+        throw new HttpException('Usuário não encontrado', HttpStatus.NOT_FOUND);
+      }
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
   }
 
   async update(token: string, data: UpdateUserDto) {
@@ -168,53 +197,68 @@ export class UsersService {
       data.password = await this.hasher.hash(data.password);
     }
 
-    const userExists = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const userExists = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    if (data.email!) {
-      throw new HttpException('Email cannot be updated', HttpStatus.FORBIDDEN);
+      if (data.email!) {
+        throw new HttpException(
+          'Email cannot be updated',
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
+      if (!userExists) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      const user = await this.prisma.user.update({
+        data,
+        where: {
+          id,
+        },
+      });
+
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      };
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    if (!userExists) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
-    }
-
-    const user = await this.prisma.user.update({
-      data,
-      where: {
-        id,
-      },
-    });
-
-    return {
-      id: user.id,
-      name: user.name,
-      email: user.email,
-    };
   }
 
   async remove(token: string) {
     const userToken = token.split(' ')[1];
     const { id } = await this.tokenService.decrypt(userToken);
 
-    const userExists = await this.prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const userExists = await this.prisma.user.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    if (!userExists) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      if (!userExists) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+      await this.prisma.user.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Internal server error',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
-
-    await this.prisma.user.delete({
-      where: {
-        id,
-      },
-    });
 
     return { message: 'User deleted' };
   }
