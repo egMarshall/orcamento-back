@@ -77,10 +77,6 @@ export class BudgetItemsService {
         },
       });
 
-      if (allItems.length < 1) {
-        throw new HttpException('Não há itens salvos', HttpStatus.NOT_FOUND);
-      }
-
       return allItems.map((item) => {
         return {
           id: item.id,
@@ -135,6 +131,17 @@ export class BudgetItemsService {
 
       if (!budgetItemExists) {
         throw new HttpException('No item found', HttpStatus.NOT_FOUND);
+      }
+
+      const budgetItemNameExists = await this.prisma.items.findFirst({
+        where: {
+          name: data.name,
+          user_id: id,
+        },
+      });
+
+      if (budgetItemNameExists) {
+        throw new HttpException('Item já cadastrado!', HttpStatus.BAD_REQUEST);
       }
 
       if (data.date) {
